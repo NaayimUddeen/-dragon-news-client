@@ -1,12 +1,17 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../AuthProvider/AuthProvider';
 
+
 const Login = () => {
-    const { signIn } = useContext(AuthContext);
-    const navigate = useNavigate()
+    const [error, setError] = useState('');
+    const { signIn, user } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const from = location?.state?.from?.pathname || '/';
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -18,11 +23,21 @@ const Login = () => {
                 const user = result.user;
                 console.log(user);
                 form.reset();
-                navigate('/')
-            })
-        .catch(error=> console.error())
-    }
+                setError('');
+                // navigate('/');
+                navigate(from, { replace: true });
 
+            })
+            .catch(error => {
+                console.error(error)
+                setError(error.message);
+            })
+    }
+    // useEffect(() => {
+    //     if (user) {
+    //     }
+    // }, [from, user, navigate])
+    
     return (
         <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -32,15 +47,15 @@ const Login = () => {
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
-                <Form.Control name='password' type="password" placeholder="Password" required/>
+                <Form.Control name='password' type="password" placeholder="Password" required />
             </Form.Group>
 
             <Button variant="primary" type="submit">
                 Login
             </Button>
-            {/* <Form.Text className="text-danger">
-                We'll never share your email with anyone else.
-            </Form.Text> */}
+            <Form.Text className="text-danger">
+                {error}
+            </Form.Text>
         </Form>
     );
 };

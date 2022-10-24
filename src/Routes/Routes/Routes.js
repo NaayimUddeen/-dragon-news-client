@@ -5,12 +5,15 @@ import News from "../../Component/Pages/News/News";
 import Main from "../../Layout/Main";
 import Login from "../../Login/Login/Login";
 import Register from "../../Login/Register/Register";
+import TermsAndConditions from "../../Terms&Conditions/TermsAndConditions";
+import PrivetRoute from "../PrivetRoute/PrivetRoute";
+
 
 export const routes = createBrowserRouter([
     {
-        path:'/',
-        element:<Main></Main>,
-        children:[
+        path: '/',
+        element: <Main></Main>,
+        children: [
             {
                 path: '/',
                 element: <Home></Home>,
@@ -23,8 +26,8 @@ export const routes = createBrowserRouter([
             },
             {
                 path: '/news/:id',
-                element: <News></News>,
-                loader: ({params})=> fetch(`http://localhost:5000/news/${params.id}`)
+                element: <PrivetRoute><News></News></PrivetRoute>,
+                loader: ({ params }) => fetch(`http://localhost:5000/news/${params.id}`)
             },
             {
                 path: '/login',
@@ -33,6 +36,10 @@ export const routes = createBrowserRouter([
             {
                 path: '/register',
                 element: <Register></Register>,
+            },
+            {
+                path: '/terms',
+                element: <TermsAndConditions></TermsAndConditions>
             }
         ]
     }
